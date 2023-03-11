@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config'
+import database from './database'
 
 export default registerAs('config', () => ({
   port: +process.env.PORT || 3000,
@@ -15,3 +16,5 @@ export enum DB_TYPES {
   POSTGRES = 'postgres',
   MONGODB = 'mongodb',
 }
+
+export { database }
