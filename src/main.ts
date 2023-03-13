@@ -8,7 +8,12 @@ async function bootstrap() {
   const logger = new Logger('Main')
 
   app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
   )
 
   const configService = app.get(ConfigService)

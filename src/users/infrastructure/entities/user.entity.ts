@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { IUser } from '../domain/user.entity'
+import type { IUser } from '../../domain'
 
 @Entity({ name: 'users' })
 export class User implements IUser {

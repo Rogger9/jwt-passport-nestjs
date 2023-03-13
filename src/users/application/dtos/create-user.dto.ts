@@ -1,5 +1,5 @@
 import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator'
-import { IUser } from '../../domain/user.entity'
+import { IUser } from '../../domain'
 
 export class CreateUserDto implements IUser {
   @IsString()

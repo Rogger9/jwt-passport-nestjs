@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { PaginationDto } from 'src/common/application/dtos/pagination.dto'
-import { ICommonRepository } from 'src/common/application/interfaces'
-import { CreateUserDto } from '../application/dtos/create-user.dto'
-import { UpdateUserDto } from '../application/dtos/update-user.dto'
-import { User } from './user.schema'
+import { ICommonRepository, PaginationDto } from 'src/common/application'
+import { CreateUserDto, UpdateUserDto } from '../../application'
+import { User } from '../entities/user.entity'
 
 @Injectable()
 export class UsersInMemory implements ICommonRepository<User> {

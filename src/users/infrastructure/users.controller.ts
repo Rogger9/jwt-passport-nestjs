@@ -1,15 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
-import { PaginationDto } from 'src/common/application/dtos/pagination.dto'
-import { CreateUserDto } from '../application/dtos/create-user.dto'
-import { UpdateUserDto } from '../application/dtos/update-user.dto'
-import { UsersService } from '../application/users.service'
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put, Query } from '@nestjs/common'
+import { PaginationDto } from 'src/common/application'
+import { CreateUserDto, UpdateUserDto, UsersService } from '../application'
+import { UsersRepository } from './repositories/users-repository'
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    @Inject(UsersRepository)
+    private usersService: UsersService,
+  ) {}
 
   @Get()
-  find(@Query() pag?: PaginationDto) {
+  find(@Query() pag: PaginationDto) {
     return this.usersService.find(pag)
   }
 
