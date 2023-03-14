@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
@@ -18,7 +18,9 @@ export class UsersRepository implements ICommonRepository<User> {
   }
 
   async findOne(id: string) {
-    return await this.userRepository.findOneBy({ id })
+    const user = await this.userRepository.findOneBy({ id })
+    if (!user) throw new NotFoundException(`Usuarion con ${id} no fue encontrado`)
+    return user
   }
 
   async create(data: CreateUserDto) {
@@ -27,6 +29,7 @@ export class UsersRepository implements ICommonRepository<User> {
   }
 
   async update(id: string, data: UpdateUserDto) {
+    await this.findOne(id)
     const user = await this.userRepository.preload({ id, ...data })
     return await this.save(user)
   }

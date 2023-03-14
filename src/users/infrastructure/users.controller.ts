@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common'
 import { PaginationDto } from 'src/common/application'
 import { CreateUserDto, UpdateUserDto, UsersService } from '../application'
 import { UsersRepository } from './repositories/users-repository'
@@ -21,12 +32,12 @@ export class UsersController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: UpdateUserDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() data: UpdateUserDto) {
     return this.usersService.update(id, data)
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
+  delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.delete(id)
   }
 }
