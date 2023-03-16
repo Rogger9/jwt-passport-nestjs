@@ -11,4 +11,13 @@ export class User implements IUser {
 
   @Column('text')
   password: string
+
+  @Column('text')
+  name: string
+
+  @Column('bool', { default: true })
+  isActive: boolean
+
+  @Column('text', { array: true, default: ['user'] })
+  roles: string[]
 }
