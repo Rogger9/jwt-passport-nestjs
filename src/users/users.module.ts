@@ -1,17 +1,13 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { ICommonRepositoryToken } from 'src/common/application'
-import { UsersService } from './application'
-import { User, UsersController, UsersInMemory, UsersRepository } from './infrastructure'
+import { User } from './entities/user.entity'
+import { UsersController } from './users.controller'
+import { UsersService } from './users.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    UsersRepository,
-    { provide: ICommonRepositoryToken, useClass: UsersInMemory },
-  ],
+  providers: [UsersService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

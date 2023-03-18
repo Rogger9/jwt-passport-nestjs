@@ -3,27 +3,28 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
   Query,
 } from '@nestjs/common'
-import { PaginationDto } from 'src/common/application'
-import { CreateUserDto, UpdateUserDto, UsersService } from '../application'
-import { UsersRepository } from './repositories/users-repository'
+import { PaginationDto } from 'src/common/dtos'
+import { CreateUserDto, UpdateUserDto } from './dtos'
+import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    @Inject(UsersRepository)
-    private usersService: UsersService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   @Get()
   find(@Query() pag: PaginationDto) {
     return this.usersService.find(pag)
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.findOne(id)
   }
 
   @Post()

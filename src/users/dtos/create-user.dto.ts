@@ -1,9 +1,8 @@
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator'
 import { expressions } from 'src/utils/contants/expressions'
 import { PASSWORD_DTO } from 'src/utils/contants/messages'
-import { IUser } from '../../domain'
 
-export class CreateUserDto implements IUser {
+export class CreateUserDto {
   @IsEmail()
   @IsString()
   email: string
