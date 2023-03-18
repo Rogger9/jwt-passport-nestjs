@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { CommonService } from 'src/common/common.service'
 import { PaginationDto } from 'src/common/dtos'
 import { Repository } from 'typeorm'
 import { CreateUserDto, UpdateUserDto } from './dtos'
@@ -7,10 +8,14 @@ import { User } from './entities/user.entity'
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly commonService: CommonService,
+  ) {}
 
-  async create(data: CreateUserDto) {
-    const user = this.userRepository.create(data)
+  async create({ password, ...data }: CreateUserDto) {
+    const hash = await this.commonService.hash(password)
+    const user = this.userRepository.create({ ...data, password: hash })
     return await this.userRepository.save(user)
   }
   async findOne(id: string) {

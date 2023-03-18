@@ -4,6 +4,7 @@ import database from './database'
 export default registerAs('config', () => ({
   port: +process.env.PORT || 3000,
   isMongo: process.env.DB_TYPE === DB_TYPES.MONGODB,
+  saltHash: +process.env.SALT_HASH,
 }))
 
 export enum NODE_ENV {

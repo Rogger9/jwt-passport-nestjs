@@ -8,4 +8,5 @@ export const validationSchema = Joi.object({
   DB_PORT: Joi.number().required(),
   DB_NAME: Joi.string().required(),
   DB_HOST: Joi.string().default('localhost'),
+  SALT_HASH: Joi.number().required(),
 })
