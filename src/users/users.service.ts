@@ -18,11 +18,10 @@ export class UsersService {
     const user = this.userRepository.create({ ...data, password: hash })
     return await this.userRepository.save(user)
   }
+
   async findOne(id: string) {
     const user = await this.userRepository.findOneBy({ id })
-
     if (!user) throw new NotFoundException(`User with id ${id} not found`)
-
     return user
   }
 
@@ -31,6 +30,7 @@ export class UsersService {
   }
 
   async update(id: string, data: UpdateUserDto) {
+    await this.findOne(id)
     const user = await this.userRepository.preload({ id, ...data })
     return await this.userRepository.save(user)
   }

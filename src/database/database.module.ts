@@ -6,10 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
   imports: [
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        ...config.get('database'),
-        useUnifiedTopology: config.get('config.isMongo'),
-      }),
+      useFactory: (config: ConfigService) => config.get('database'),
     }),
   ],
   exports: [TypeOrmModule],

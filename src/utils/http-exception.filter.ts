@@ -32,7 +32,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       case exception instanceof HttpException:
         exc = exception as HttpException
         statusCode = exc.getStatus()
-        message = exc.message
+        message = exc['response']['message']
         break
 
       case exception instanceof QueryFailedError:
