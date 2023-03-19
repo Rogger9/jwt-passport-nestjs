@@ -9,4 +9,5 @@ export const validationSchema = Joi.object({
   DB_NAME: Joi.string().required(),
   DB_HOST: Joi.string().default('localhost'),
   SALT_HASH: Joi.number().required(),
+  JWT_SECRET: Joi.string().required(),
 })
