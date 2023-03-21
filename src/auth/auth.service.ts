@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+
 import { CommonService } from 'src/common/common.service'
 import { User } from 'src/users/entities/user.entity'
-import { Repository } from 'typeorm'
-import { LoginDto } from './dtos/login.dto'
+import { CreateUserDto, LoginDto } from './dtos'
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,12 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly commonService: CommonService,
   ) {}
+
+  async create({ password, ...data }: CreateUserDto) {
+    const hash = await this.commonService.hash(password)
+    const user = this.userRepository.create({ ...data, password: hash })
+    return await this.userRepository.save(user)
+  }
 
   async login({ email, password }: LoginDto) {
     try {

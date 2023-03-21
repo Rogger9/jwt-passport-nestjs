@@ -1,16 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common'
 import { PaginationDto } from 'src/common/dtos'
-import { CreateUserDto, UpdateUserDto } from './dtos'
+import { UpdateUserDto } from './dtos'
 import { UsersService } from './users.service'
 
 @Controller('users')
@@ -25,11 +15,6 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne(id)
-  }
-
-  @Post()
-  create(@Body() user: CreateUserDto) {
-    return this.usersService.create(user)
   }
 
   @Put(':id')
