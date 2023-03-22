@@ -23,14 +23,14 @@ export class AuthService {
     await this.userRepository.save(user)
     return {
       user,
-      token: this.getToken({ email: user.email }),
+      token: this.getToken({ id: user.id }),
     }
   }
 
   async login({ email, password }: LoginDto) {
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true },
+      select: { email: true, password: true, id: true },
     })
     const isValidHash = user && (await this.commonService.isValidHash(password, user.password))
 
@@ -38,7 +38,7 @@ export class AuthService {
 
     return {
       user,
-      token: this.getToken({ email }),
+      token: this.getToken({ id: user.id }),
     }
   }
 
