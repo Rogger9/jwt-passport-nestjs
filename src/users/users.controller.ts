@@ -1,4 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common'
+import { Auth } from 'src/auth/decorators'
+import { ValidRoles } from 'src/auth/interfaces'
 import { PaginationDto } from 'src/common/dtos'
 import { UpdateUserDto } from './dtos'
 import { UsersService } from './users.service'
@@ -8,6 +10,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
+  @Auth(ValidRoles.ADMIN)
   find(@Query() pag: PaginationDto) {
     return this.usersService.find(pag)
   }

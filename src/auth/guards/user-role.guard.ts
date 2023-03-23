@@ -20,6 +20,8 @@ export class UserRoleGuard implements CanActivate {
     const validRoles: string[] = this.reflector.get(META_ROLES, ctx.getHandler())
     const user = req.user as User
 
+    if (!validRoles || validRoles.length === 0) return true
+
     if (!user) throw new BadRequestException('User not found')
 
     const isValid = !!validRoles.find(el => user.roles.includes(el))

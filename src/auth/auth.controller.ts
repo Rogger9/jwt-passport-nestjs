@@ -2,9 +2,8 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { User } from 'src/users/entities/user.entity'
 import { AuthService } from './auth.service'
-import { GetUser, RawHeaders, RoleProtected } from './decorators'
+import { Auth, GetUser, RawHeaders } from './decorators'
 import { CreateUserDto, LoginDto } from './dtos'
-import { UserRoleGuard } from './guards/user-role.guard'
 import { ValidRoles } from './interfaces'
 
 @Controller('auth')
@@ -32,8 +31,7 @@ export class AuthController {
   }
 
   @Get('private-roles')
-  @RoleProtected(ValidRoles.ADMIN)
-  @UseGuards(AuthGuard(), UserRoleGuard)
+  @Auth(ValidRoles.ADMIN)
   privateRoles(@GetUser() user: User) {
     return { message: 'Private roles', user }
   }
