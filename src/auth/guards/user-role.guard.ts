@@ -10,6 +10,7 @@ import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { User } from 'src/users/entities/user.entity'
 import { META_ROLES } from '../decorators'
+import { ValidRoles } from '../interfaces'
 
 @Injectable()
 export class UserRoleGuard implements CanActivate {
@@ -17,7 +18,7 @@ export class UserRoleGuard implements CanActivate {
 
   canActivate(ctx: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req: Request = ctx.switchToHttp().getRequest()
-    const validRoles: string[] = this.reflector.get(META_ROLES, ctx.getHandler())
+    const validRoles: ValidRoles[] = this.reflector.get(META_ROLES, ctx.getHandler())
     const user = req.user as User
 
     if (!validRoles || validRoles.length === 0) return true
