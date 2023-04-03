@@ -1,11 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-
 import { CommonService } from 'src/common/common.service'
+import { CommonResponse } from 'src/common/interfaces'
 import { User } from 'src/users/entities/user.entity'
+import { Repository } from 'typeorm'
 import { CreateUserDto, LoginDto } from './dtos'
+import { ILoginResponse, ITokens } from './interfaces'
 import { JwtPayload } from './interfaces/payload.interface'
 
 @Injectable()
@@ -15,6 +17,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly commonService: CommonService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create({ password, ...data }: CreateUserDto) {
@@ -27,7 +30,7 @@ export class AuthService {
     }
   }
 
-  async login({ email, password }: LoginDto) {
+  async login({ email, password }: LoginDto): CommonResponse<ILoginResponse> {
     const user = await this.userRepository.findOne({
       where: { email },
       select: { email: true, password: true, id: true },
@@ -36,17 +39,39 @@ export class AuthService {
 
     if (!user || !isValidHash) throw new UnauthorizedException('Invalid credentials')
 
+    delete user.password
+
     return {
-      user,
-      token: this.getToken({ id: user.id }),
+      statusCode: HttpStatus.OK,
+      data: {
+        user,
+        tokens: await this.generateTokens({ id: user.id }),
+      },
     }
   }
 
-  checkAuthStatus(user: User) {
+  async refresh(id: string): CommonResponse<ITokens> {
+    const tokens = await this.generateTokens({ id })
+
     return {
-      user,
-      token: this.getToken({ id: user.id }),
+      statusCode: HttpStatus.OK,
+      data: tokens,
     }
+  }
+
+  private async generateTokens(payload: JwtPayload) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.sign(payload, {
+        secret: this.configService.get('config.jwtAccess'),
+        expiresIn: '2h',
+      }),
+      this.jwtService.sign(payload, {
+        secret: this.configService.get('config.jwtRefresh'),
+        expiresIn: '1d',
+      }),
+    ])
+
+    return { accessToken, refreshToken }
   }
 
   private getToken(payload: JwtPayload) {

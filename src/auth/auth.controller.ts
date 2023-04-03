@@ -5,7 +5,7 @@ import { User } from 'src/users/entities/user.entity'
 import { AuthService } from './auth.service'
 import { Auth, GetUser, RawHeaders } from './decorators'
 import { CreateUserDto, LoginDto } from './dtos'
-import { ValidRoles } from './interfaces'
+import { Strategies, ValidRoles } from './interfaces'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -22,10 +22,10 @@ export class AuthController {
     return this.authService.login(data)
   }
 
-  @Get('check-status')
-  @Auth()
-  checkAuthStatus(@GetUser() user: User) {
-    return this.authService.checkAuthStatus(user)
+  @Get('refresh')
+  @UseGuards(AuthGuard(Strategies.REFRESH))
+  refresh(@GetUser('id') id: string) {
+    return this.authService.refresh(id)
   }
 
   @Get('private')
