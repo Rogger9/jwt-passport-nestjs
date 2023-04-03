@@ -7,24 +7,24 @@ import { CommonService } from 'src/common/common.service'
 import { User } from 'src/users/entities/user.entity'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { JwtStrategy } from './strategies/jwt.strategy'
+import { JwtAccessStrategy, JwtRefreshStrategy, JwtStrategy } from './strategies'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule.register({ defaultStrategy: 'jwt-access' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get('config.jwtSecret'),
         signOptions: {
-          expiresIn: '1d',
+          expiresIn: '60s',
         },
       }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, CommonService, JwtStrategy],
+  providers: [AuthService, CommonService, JwtStrategy, JwtAccessStrategy, JwtRefreshStrategy],
   exports: [TypeOrmModule, PassportModule, JwtModule, JwtStrategy],
 })
 export class AuthModule {}

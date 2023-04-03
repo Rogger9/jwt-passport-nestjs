@@ -6,6 +6,8 @@ export default registerAs('config', () => ({
   isMongo: process.env.DB_TYPE === DB_TYPES.MONGODB,
   saltHash: +process.env.SALT_HASH,
   jwtSecret: process.env.JWT_SECRET,
+  jwtAccess: process.env.JWT_ACCESS_SECRET,
+  jwtRefresh: process.env.JWT_REFRESH_SECRET,
 }))
 
 export enum NODE_ENV {
